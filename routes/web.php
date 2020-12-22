@@ -17,6 +17,27 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
+Route::middleware(['auth:sanctum', 'verified'])->get('user/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');
+
+
+Route::middleware(['auth:sanctum', 'verified','authadmin'])->get('admin/dashboard', function () {
+    return view('admin.dashboard');
+})->name('admin.dashboard');
+
+
+// Teacher Routes--------------------------------------------------------
+Route::middleware(['auth:sanctum', 'verified','autheditor'])->get('editor/dashboard', function () {
+    return view('editor.dashboard');
+})->name('editor.dashboard');
+
+Route::middleware(['auth:sanctum', 'verified','autheditor'])->get('editor/courses',  [App\Http\Controllers\CourseController::class, 'index'])->name('editor.courses');
+
+Route::post('store-data', 'App\Http\Controllers\CourseController@store')->name('store-data');
+Route::get('get-data', 'App\Http\Controllers\CourseController@show')->name('get-data');
+// Route::post('store-data', [CourseController::class, 'store']);
+
+Route::middleware(['auth:sanctum', 'verified','authstudent'])->get('student/dashboard', function () {
+    return view('student.dashboard');
+})->name('student.dashboard');
