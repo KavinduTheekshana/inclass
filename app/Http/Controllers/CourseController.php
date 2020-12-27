@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\course;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use SebastianBergmann\Environment\Console;
 
 class CourseController extends Controller
 {
@@ -14,7 +17,8 @@ class CourseController extends Controller
      */
     public function index()
     {
-        $course = course::all();
+        $id = Auth::id();
+        $course = course::where('user_id',$id)->get();
         return view('editor.courses', [
             'courses' => $course,
         ]);
@@ -42,11 +46,13 @@ class CourseController extends Controller
         $validatedData = $request->validate([
             'name' => 'required',
         ]);
-
+        $id = Auth::id();
         $save = new course;
         $save->name = $request->name;
+        $save->user_id = $id;
         $save->save();
-        return true;
+        $course = course::where('user_id',$id)->get();
+        return view('editor.table')->with('data', $course);
     }
 
     /**
@@ -58,18 +64,18 @@ class CourseController extends Controller
     public function show()
     {
         $records = course::all();
-        foreach($records as $record){
+        foreach ($records as $record) {
             $id = $record->id;
             $username = $record->username;
             $name = $record->name;
             $email = $record->email;
-    
+
             $data_arr[] = array(
-              "id" => $id,
-              "name" => $name,
+                "id" => $id,
+                "name" => $name,
             );
-         }
-         echo json_encode($data_arr);
+        }
+        echo json_encode($data_arr);
     }
 
     /**
@@ -101,8 +107,11 @@ class CourseController extends Controller
      * @param  \App\Models\course  $course
      * @return \Illuminate\Http\Response
      */
-    public function destroy(course $course)
+    public function destroy($id)
     {
-        //
+        DB::table('courses')->where('id', $id)->delete();
+        $uid = Auth::id();
+        $course = course::where('user_id',$uid)->get();
+        return view('editor.table')->with('data', $course);
     }
 }

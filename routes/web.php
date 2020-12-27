@@ -34,9 +34,9 @@ Route::middleware(['auth:sanctum', 'verified','autheditor'])->get('editor/dashbo
 
 Route::middleware(['auth:sanctum', 'verified','autheditor'])->get('editor/courses',  [App\Http\Controllers\CourseController::class, 'index'])->name('editor.courses');
 
-Route::post('store-data', 'App\Http\Controllers\CourseController@store')->name('store-data');
 Route::get('get-data', 'App\Http\Controllers\CourseController@show')->name('get-data');
-// Route::post('store-data', [CourseController::class, 'store']);
+Route::get('class_delete/{id}', [App\Http\Controllers\CourseController::class, 'destroy'])->middleware('autheditor');
+Route::post('store-data', [App\Http\Controllers\CourseController::class, 'store'])->name('store-data');
 
 Route::middleware(['auth:sanctum', 'verified','authstudent'])->get('student/dashboard', function () {
     return view('student.dashboard');

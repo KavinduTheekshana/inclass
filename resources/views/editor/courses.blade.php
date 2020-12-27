@@ -90,9 +90,10 @@
                 $("#submit").attr("disabled", true);
                 $.ajax({
                     url: "{{url('store-data')}}",
-                    type: "POST",
+                    type: "post",
                     data: $('#courseForm').serialize(),
                     success: function(response) {
+                        $('#tbodynew').html(response);
                         $('#submit').html('Submit');
                         $("#submit").attr("disabled", false);
                         $('#successMessage').removeClass("d-none");
@@ -127,38 +128,31 @@
                     <tr>
                         <th>ID</th>
                         <th>Name</th>
-
-
+                        <th>Action</th>
                     </tr>
                 </thead>
 
+                <tbody id="tbodynew">
+                    @foreach($courses as $course)
+                    <tr>
+                        <td>{{$course->id}}</td>
+                        <td>{{$course->name}}</td>
+                        <td><button onclick="sweet('{{$course->id}}')" type="button" class="btn btn-danger">
+                                <i class="material-icons icon--left">delete</i> Delete
+                            </button></td>
+                    </tr>
+                    @endforeach
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Action</th>
+                    </tr>
+                </tfoot>
             </table>
 
 
-            <script>
-                $(document).ready(function() {
-                    $('#data-table').DataTable({
-                        processing: true,
-                        serverSide: true,
-                        ajax: {
-                            url: "{{route('get-data')}}",
-                            type: 'GET',
-                        },
-                        columns: [{
-
-                                data: 'id',
-                                name: 'id'
-                            },
-
-                            {
-                                data: 'name',
-                                name: 'name'
-                            },
-
-                        ]
-                    });
-                });
-            </script>
 
 
 
@@ -202,7 +196,60 @@
 </div>
 
 
+<script>
+    $(document).ready(function() {
+        $.noConflict();
+        var table = $('#data-table').DataTable();
+    });
+</script>
 
+
+<script>
+        function sweet(id) {
+            swal({
+                    title: "Are you sure?",
+                    text: "Once deleted, you will not be able to recover this imaginary file!",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        $.ajax({
+                            url: "{{ url('class_delete')}}" + '/' + id,
+                            type: "GET",
+                            success: function(response) {
+                       
+                                swal({
+                                    title: "Success!",
+                                    text: "Poof! Your imaginary file has been deleted!",
+                                    type: "success",
+                                }).then(
+                                    function() {
+                                        $('#tbodynew').html(response);
+                                    });
+                                    $('#tbodynew').html(response);
+                            },
+                            error: function() {
+                                swal({
+                                    title: 'Opps...',
+                                    text: 'data.message',
+                                    type: 'error',
+                                    timer: '1500'
+                                })
+                            }
+                        })
+                        // swal("Poof! Your imaginary file has been deleted!", {
+                        //     icon: "success",
+                        // });
+                    } else {
+                        swal("Your imaginary file is safe!", {
+                            icon: "info",
+                        });
+                    }
+                });
+        };
+    </script>
 
 
 @endsection
