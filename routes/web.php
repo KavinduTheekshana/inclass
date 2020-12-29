@@ -22,22 +22,29 @@ Route::middleware(['auth:sanctum', 'verified'])->get('user/dashboard', function 
 })->name('dashboard');
 
 
-Route::middleware(['auth:sanctum', 'verified','authadmin'])->get('admin/dashboard', function () {
+Route::middleware(['auth:sanctum', 'verified', 'authadmin'])->get('admin/dashboard', function () {
     return view('admin.dashboard');
 })->name('admin.dashboard');
 
 
 // Teacher Routes--------------------------------------------------------
-Route::middleware(['auth:sanctum', 'verified','autheditor'])->get('editor/dashboard', function () {
+Route::middleware(['auth:sanctum', 'verified', 'autheditor'])->get('editor/dashboard', function () {
     return view('editor.dashboard');
 })->name('editor.dashboard');
 
-Route::middleware(['auth:sanctum', 'verified','autheditor'])->get('editor/courses',  [App\Http\Controllers\CourseController::class, 'index'])->name('editor.courses');
+Route::middleware(['auth:sanctum', 'verified', 'autheditor'])->get('editor/courses',  
+[App\Http\Controllers\CourseController::class, 'index'])->name('editor.courses');
+
+Route::middleware(['auth:sanctum', 'verified', 'autheditor'])->get('editor/add_students',  
+[App\Http\Controllers\StudentController::class, 'index'])->name('editor.add_students');
+
+Route::post('store-student', [App\Http\Controllers\StudentController::class, 'store'])->name('store-student');
+
 
 Route::get('get-data', 'App\Http\Controllers\CourseController@show')->name('get-data');
 Route::get('class_delete/{id}', [App\Http\Controllers\CourseController::class, 'destroy'])->middleware('autheditor');
 Route::post('store-data', [App\Http\Controllers\CourseController::class, 'store'])->name('store-data');
 
-Route::middleware(['auth:sanctum', 'verified','authstudent'])->get('student/dashboard', function () {
+Route::middleware(['auth:sanctum', 'verified', 'authstudent'])->get('student/dashboard', function () {
     return view('student.dashboard');
 })->name('student.dashboard');
