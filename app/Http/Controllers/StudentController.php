@@ -44,16 +44,18 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required',
-        ]);
-        $id = Auth::id();
-        $save = new course;
-        $save->name = $request->name;
-        $save->user_id = $id;
-        $save->save();
-        $course = course::where('user_id',$id)->get();
-        return view('editor.table')->with('data', $course);
+        return("asdasd");
+
+        // $validatedData = $request->validate([
+        //     'name' => 'required',
+        // ]);
+        // $id = Auth::id();
+        // $save = new course;
+        // $save->name = $request->name;
+        // $save->user_id = $id;
+        // $save->save();
+        // $course = course::where('user_id',$id)->get();
+        // return view('editor.table')->with('data', $course);
     }
 
     /**

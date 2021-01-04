@@ -17,6 +17,21 @@
 <div class="container-fluid page__container page-section">
 
 
+    <div class="alert bg-success text-white border-0 d-none" id="successMessage" role="alert">
+        <div class="d-flex flex-wrap align-items-start">
+            <div class="mr-8pt">
+                <i class="material-icons">check</i>
+            </div>
+            <div class="flex" style="min-width: 180px">
+                <small>
+                    <strong>Great</strong> New Course Added successfully.
+                </small>
+            </div>
+        </div>
+    </div>
+
+
+
     <form name="StudentForm" id="StudentForm" method="post" action="javascript:void(0)">
         @csrf
 
@@ -112,7 +127,7 @@
 
         <div class="row mb-32pt">
             <div class="col-lg-7 d-flex align-items-center">
-                <button type="submit" onclick="savestudent()" id="submit" class="btn btn-primary btn-block float-right">Save Student</button>
+                <button type="submit" id="submit" class="btn btn-primary btn-block float-right">Save Student</button>
             </div>
 
     </form>
@@ -166,7 +181,7 @@
                 },
                 phone: {
                     required: true,
-                    maxlength: 10
+                    regex: '^[0-9]{6}-[0-9]{4}$'
                 },
                 school: {
                     required: true,
@@ -235,14 +250,16 @@
                     type: "post",
                     data: $('#StudentForm').serialize(),
                     success: function(response) {
-                        $('#tbodynew').html(response);
+                        alert(response);
+
+
                         $('#submit').html('Submit');
                         $("#submit").attr("disabled", false);
                         $('#successMessage').removeClass("d-none");
                         setTimeout(function() {
                             $('#successMessage').addClass('d-none');
                         }, 5000);
-                        document.getElementById("courseForm").reset();
+                        document.getElementById("StudentForm").reset();
                     }
                 });
             }
